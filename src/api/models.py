@@ -1,15 +1,17 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, TIMESTAMP
+from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, TIMESTAMP
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
 from api.database import Base
 
 class Evacuee(Base):
     __tablename__ = "evacuee_table"
 
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, index=True)
-    age = Column(Integer)
-    gender = Column(String)
-    address = Column(String)
+    evacuee_id = Column(String(64), primary_key=True, index=True)
+    is_safety = Column(Boolean)
+    shelter_code = Column(String(64))
+    allergy_code = Column(String(2))
+    update_at = Column(TIMESTAMP, server_default=func.now(), onupdate=func.now())
+    create_at = Column(TIMESTAMP, server_default=func.now())
 
 class Material(Base):
     __tablename__ = "materials_table"

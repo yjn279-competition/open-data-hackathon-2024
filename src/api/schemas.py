@@ -3,19 +3,23 @@ from datetime import datetime
 from typing import List, Optional
 
 class EvacueeBase(BaseModel):
-    name: str
-    age: int
-    gender: str
-    address: str
+    is_safety: Optional[bool] = None
+    shelter_code: Optional[str] = None
+    allergy_code: Optional[str] = None
 
 class EvacueeCreate(EvacueeBase):
+    evacuee_id: str
+
+class EvacueeUpdate(EvacueeBase):
     pass
 
 class Evacuee(EvacueeBase):
-    id: int
+    evacuee_id: str
+    update_at: datetime
+    create_at: datetime
 
     class Config:
-        orm_mode: True
+        orm_mode = True
 
 class MaterialDetailBase(BaseModel):
     description: str
