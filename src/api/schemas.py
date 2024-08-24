@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from datetime import datetime
+from datetime import datetime, date
 from typing import List, Optional
 
 class EvacueeBase(BaseModel):
@@ -21,19 +21,40 @@ class Evacuee(EvacueeBase):
     class Config:
         orm_mode = True
 
+"""
+MaterialDetailの基本的なスキーマを定義します。quantity, allergy_code, expiration_dateは任意フィールドです。
+"""
 class MaterialDetailBase(BaseModel):
-    description: str
-    created_at: datetime
+    name: str
+    genre: str
+    quantity: Optional[int] = 0
+    allergy_code: Optional[str] = None
+    expiration_date: Optional[date] = None
 
+"""
+新しい材料詳細を作成するためのスキーマ。material_idとbranch_numberが必須フィールドです。
+"""
 class MaterialDetailCreate(MaterialDetailBase):
+    material_id: str
+    branch_number: str
+
+"""
+既存の材料詳細を更新するためのスキーマ。更新対象のフィールドのみを含めます。
+"""
+class MaterialDetailUpdate(MaterialDetailBase):
     pass
 
+"""
+データベースから取得した材料詳細を表現するためのスキーマ。タイムスタンプを含みます。
+"""
 class MaterialDetail(MaterialDetailBase):
-    id: int
-    material_id: int
+    material_id: str
+    branch_number: str
+    update_at: datetime
+    create_at: datetime
 
     class Config:
-        orm_mode: True
+        orm_mode = True
 
 class MaterialBase(BaseModel):
     name: str
