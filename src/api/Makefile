@@ -15,14 +15,13 @@ install:
 
 # マイグレーションを実行
 migrate:
-	PYTHONPATH=$(PWD)/src/api $(VENV_PYTHON) src/api/migrate.py
-
+	PYTHONPATH=$(PWD) $(VENV_PYTHON) migrate.py
 
 # アプリケーションを実行
 run:
-	PYTHONPATH=$(PWD)/src $(VENV_PYTHON) src/api/run_app.py
+	PYTHONPATH=$(PWD) $(VENV_PYTHON) run_app.py
 
-# 仮想環境の作成とアプリケーションの実行を一連で行う
+# 仮想環境を作成し、依存パッケージをインストールしてアプリケーションを実行
 start: install run
 
 # 仮想環境を削除
