@@ -7,7 +7,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), 'app'))
 from database import get_db_connection
 
 # DDLディレクトリ
-DDL_DIR = "./ddl"
+DDL_DIR = "./migration"
 
 def execute_ddl_scripts():
     conn = get_db_connection()
