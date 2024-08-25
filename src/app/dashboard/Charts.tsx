@@ -1,48 +1,16 @@
-'use client'
-
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
+import { DashboardData } from './server';
 
-const EvacueeDashboard = () => {
-  const svgRef = useRef();
-  const [users, setUsers] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filters, setFilters] = useState({
-    gender: '',
-    ageGroup: '',
-    allergen: ''
-  });
+interface ChartsProps {
+  data: DashboardData;
+}
+
+const Charts: React.FC<ChartsProps> = ({ data }) => {
+  const svgRef = useRef<SVGSVGElement>(null);
 
   useEffect(() => {
-    // サンプルデータ (変更なし)
-    const data = {
-      evacueeCapacity: {
-        total: 700,
-        current: 658,
-        male: 326,
-        female: 332
-      },
-      ageDistribution: [
-        { ageGroup: '0-', count: 50 },
-        { ageGroup: '10-', count: 100 },
-        { ageGroup: '20-', count: 150 },
-        { ageGroup: '30-', count: 120 },
-        { ageGroup: '40-', count: 100 },
-        { ageGroup: '50-', count: 80 },
-        { ageGroup: '60-', count: 70 },
-        { ageGroup: '70-', count: 50 },
-        { ageGroup: '80-', count: 30 }
-      ],
-      allergenDistribution: [
-        { allergen: '卵', count: 50 },
-        { allergen: '乳', count: 40 },
-        { allergen: '小麦', count: 30 },
-        { allergen: 'そば', count: 10 },
-        { allergen: '落花生', count: 15 },
-        { allergen: 'えび', count: 20 },
-        { allergen: 'かに', count: 10 }
-      ]
-    };
+    if (!svgRef.current) return;
 
     const svg = d3.select(svgRef.current);
     svg.selectAll("*").remove();
@@ -68,8 +36,8 @@ const EvacueeDashboard = () => {
       .domain(pieData.map(d => d.label))
       .range([colors[0], colors[1]]);
 
-    const pie = d3.pie().value(d => d.value);
-    const arc = d3.arc().innerRadius(pieRadius * 0.6).outerRadius(pieRadius);
+    const pie = d3.pie<{ label: string; value: number }>().value(d => d.value);
+    const arc = d3.arc<d3.PieArcDatum<{ label: string; value: number }>>().innerRadius(pieRadius * 0.6).outerRadius(pieRadius);
 
     const pieGroup = svg.append('g')
       .attr('transform', `translate(${pieWidth / 2}, ${pieHeight / 2})`);
@@ -115,7 +83,7 @@ const EvacueeDashboard = () => {
 
     const barY = d3.scaleLinear()
       .range([barHeight - barMargin.top - barMargin.bottom, 0])
-      .domain([0, d3.max(data.ageDistribution, d => d.count)]);
+      .domain([0, d3.max(data.ageDistribution, d => d.count) || 0]);
 
     const ageGroup = svg.append('g')
       .attr('transform', `translate(${pieWidth + barMargin.left}, ${barMargin.top})`);
@@ -124,7 +92,7 @@ const EvacueeDashboard = () => {
       .data(data.ageDistribution)
       .enter().append('rect')
       .attr('class', 'bar')
-      .attr('x', d => barX(d.ageGroup))
+      .attr('x', d => barX(d.ageGroup) || 0)
       .attr('width', barX.bandwidth())
       .attr('y', barHeight - barMargin.top - barMargin.bottom)
       .attr('height', 0)
@@ -165,13 +133,13 @@ const EvacueeDashboard = () => {
 
     const allergenY = d3.scaleLinear()
       .range([barHeight - barMargin.top - barMargin.bottom, 0])
-      .domain([0, d3.max(data.allergenDistribution, d => d.count)]);
+      .domain([0, d3.max(data.allergenDistribution, d => d.count) || 0]);
 
     allergenGroup.selectAll('.bar')
       .data(data.allergenDistribution)
       .enter().append('rect')
       .attr('class', 'bar')
-      .attr('x', d => allergenX(d.allergen))
+      .attr('x', d => allergenX(d.allergen) || 0)
       .attr('width', allergenX.bandwidth())
       .attr('y', barHeight - barMargin.top - barMargin.bottom)
       .attr('height', 0)
@@ -196,73 +164,9 @@ const EvacueeDashboard = () => {
       .attr('font-weight', 'bold')
       .text('主要アレルゲンごとの避難者数');
 
-    // ユーザーデータの取得（実際のAPIコールに置き換える）
-    const fetchUsers = async () => {
-      // サンプルデータ
-      const sampleUsers = [
-        { id: '1234567890', name: '山田太郎', gender: '男性', age: 35, allergens: ['卵'] },
-        { id: '2345678901', name: '佐藤花子', gender: '女性', age: 28, allergens: ['乳', '小麦'] },
-        // ... その他のユーザー
-      ];
-      setUsers(sampleUsers);
-    };
-    fetchUsers();
-  }, []);
+  }, [data]);
 
-  const filteredUsers = users.filter(user => 
-    (user.id.includes(searchTerm) || user.name.includes(searchTerm)) &&
-    (filters.gender === '' || user.gender === filters.gender) &&
-    (filters.ageGroup === '' || getAgeGroup(user.age) === filters.ageGroup) &&
-    (filters.allergen === '' || user.allergens.includes(filters.allergen))
-  );
-
-  const getAgeGroup = (age) => {
-    // 年齢から年代を返す関数
-    // ...
-  };
-
-  return (
-    <div className="container mx-auto p-4">
-      <div className="bg-white shadow-lg rounded-lg p-6 mb-6">
-        <svg ref={svgRef}></svg>
-      </div>
-
-      <div className="bg-white shadow-lg rounded-lg p-6">
-        <h2 className="text-2xl font-bold mb-4">避難者リスト</h2>
-        <div className="mb-4">
-          <input
-            type="text"
-            placeholder="ID or 氏名で検索"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="border p-2 rounded"
-          />
-          {/* フィルターのドロップダウンを追加 */}
-          {/* ... */}
-        </div>
-        <table className="w-full">
-          <thead>
-            <tr>
-              <th>氏名</th>
-              <th>性別</th>
-              <th>年齢</th>
-              <th>住所</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredUsers.map(user => (
-              <tr key={user.id}>
-                <td>{user.name}</td>
-                <td>{user.gender}</td>
-                <td>{user.age}</td>
-                <td>{user.address}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
+  return <svg ref={svgRef}></svg>;
 };
 
-export default EvacueeDashboard;
+export default Charts;
