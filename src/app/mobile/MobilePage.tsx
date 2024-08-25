@@ -24,13 +24,13 @@ const MobilePage = () => {
             <div className="p-4">
               <button
                 onClick={() => setIsMenuOpen(false)}
-                className="text-2xl mb-4"
+                className="text-2xl mb-4 text-black"
               >
                 ×
               </button>
               <nav>
                 <ul>
-                  <li><Link href="/info" className="block py-2">情報一覧</Link></li>
+                  <li><Link href="./MyPage" className="block py-2 text-black">情報一覧</Link></li>
                   {/* 他のメニュー項目 */}
                 </ul>
               </nav>
@@ -52,9 +52,9 @@ const MobilePage = () => {
         </div>
 
         {/* Disaster Information */}
-        <div className="bg-white rounded-lg shadow p-4">
+        <div className="bg-white rounded-lg shadow p-4 text-black">
           <h3 className="text-lg font-semibold mb-2">災害時の行動指針</h3>
-          <p>
+          <p className='text-black'>
             1. 落ち着いて状況を確認する<br />
             2. 安全な場所に避難する<br />
             3. 家族や周囲の人の安否を確認する<br />
