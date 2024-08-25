@@ -1,29 +1,37 @@
 'use client'
-import React, { useEffect, useRef } from 'react';
+
+import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 
 const EvacueeDashboard = () => {
   const svgRef = useRef();
+  const [users, setUsers] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filters, setFilters] = useState({
+    gender: '',
+    ageGroup: '',
+    allergen: ''
+  });
 
   useEffect(() => {
     // サンプルデータ (変更なし)
     const data = {
       evacueeCapacity: {
-        total: 1000,
-        current: 750,
-        male: 400,
-        female: 350
+        total: 700,
+        current: 658,
+        male: 326,
+        female: 332
       },
       ageDistribution: [
-        { ageGroup: '0-9', count: 50 },
-        { ageGroup: '10-19', count: 100 },
-        { ageGroup: '20-29', count: 150 },
-        { ageGroup: '30-39', count: 120 },
-        { ageGroup: '40-49', count: 100 },
-        { ageGroup: '50-59', count: 80 },
-        { ageGroup: '60-69', count: 70 },
-        { ageGroup: '70-79', count: 50 },
-        { ageGroup: '80+', count: 30 }
+        { ageGroup: '0-', count: 50 },
+        { ageGroup: '10-', count: 100 },
+        { ageGroup: '20-', count: 150 },
+        { ageGroup: '30-', count: 120 },
+        { ageGroup: '40-', count: 100 },
+        { ageGroup: '50-', count: 80 },
+        { ageGroup: '60-', count: 70 },
+        { ageGroup: '70-', count: 50 },
+        { ageGroup: '80-', count: 30 }
       ],
       allergenDistribution: [
         { allergen: '卵', count: 50 },
@@ -188,13 +196,70 @@ const EvacueeDashboard = () => {
       .attr('font-weight', 'bold')
       .text('主要アレルゲンごとの避難者数');
 
+    // ユーザーデータの取得（実際のAPIコールに置き換える）
+    const fetchUsers = async () => {
+      // サンプルデータ
+      const sampleUsers = [
+        { id: '1234567890', name: '山田太郎', gender: '男性', age: 35, allergens: ['卵'] },
+        { id: '2345678901', name: '佐藤花子', gender: '女性', age: 28, allergens: ['乳', '小麦'] },
+        // ... その他のユーザー
+      ];
+      setUsers(sampleUsers);
+    };
+    fetchUsers();
   }, []);
+
+  const filteredUsers = users.filter(user => 
+    (user.id.includes(searchTerm) || user.name.includes(searchTerm)) &&
+    (filters.gender === '' || user.gender === filters.gender) &&
+    (filters.ageGroup === '' || getAgeGroup(user.age) === filters.ageGroup) &&
+    (filters.allergen === '' || user.allergens.includes(filters.allergen))
+  );
+
+  const getAgeGroup = (age) => {
+    // 年齢から年代を返す関数
+    // ...
+  };
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">避難者ダッシュボード</h1>
-      <div className="bg-white shadow-lg rounded-lg p-6">
+      <div className="bg-white shadow-lg rounded-lg p-6 mb-6">
         <svg ref={svgRef}></svg>
+      </div>
+
+      <div className="bg-white shadow-lg rounded-lg p-6">
+        <h2 className="text-2xl font-bold mb-4">避難者リスト</h2>
+        <div className="mb-4">
+          <input
+            type="text"
+            placeholder="ID or 氏名で検索"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="border p-2 rounded"
+          />
+          {/* フィルターのドロップダウンを追加 */}
+          {/* ... */}
+        </div>
+        <table className="w-full">
+          <thead>
+            <tr>
+              <th>氏名</th>
+              <th>性別</th>
+              <th>年齢</th>
+              <th>住所</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredUsers.map(user => (
+              <tr key={user.id}>
+                <td>{user.name}</td>
+                <td>{user.gender}</td>
+                <td>{user.age}</td>
+                <td>{user.address}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );
