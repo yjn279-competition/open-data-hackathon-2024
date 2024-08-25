@@ -1,9 +1,19 @@
 from fastapi import FastAPI
 from api.routers import evacuees, materials, material_details, shelters
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
 # ルーターの登録
+# CORSを許可する設定
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],  # 許可するオリジン
+    allow_credentials=True,
+    allow_methods=["*"],  # 許可するHTTPメソッド
+    allow_headers=["*"],  # 許可するHTTPヘッダー
+)
+
 app.include_router(evacuees.router)
 app.include_router(materials.router)
 app.include_router(material_details.router)
