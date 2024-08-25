@@ -17,6 +17,17 @@ class Evacuee(Base):
     update_at = Column(TIMESTAMP, server_default=func.now(), onupdate=func.now())  # レコード更新時のタイムスタンプ
     create_at = Column(TIMESTAMP, server_default=func.now())  # レコード作成時のタイムスタンプ
 
+
+    shelter = relationship("Shelter", back_populates="evacuees")
+
+class MyNumberCard(Base):
+    __tablename__ = "my_number_card"
+    card_number = Column(String, primary_key=True, index=True)
+    full_name = Column(String)
+    birth_date = Column(Date)
+    address = Column(String)
+
+
 class Material(Base):
     """
     Materialテーブルを表すSQLAlchemyモデル。
@@ -72,6 +83,8 @@ class Shelter(Base):
     availability_status = Column(String(1), server_default="2")  # 空き状況
     update_at = Column(TIMESTAMP, server_default=func.now(), onupdate=func.now())  # レコード更新時のタイムスタンプ
     create_at = Column(TIMESTAMP, server_default=func.now())  # レコード作成時のタイムスタンプ
+
+    evacuees = relationship("Evacuee", back_populates="shelter")
 
     # availability_statusの値を制約
     __table_args__ = (

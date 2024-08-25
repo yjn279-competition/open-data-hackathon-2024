@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
-from api.crud.evacuee import create_evacuee as crud_create_evacuee, get_evacuees, get_evacuee
+from api.crud.evacuee import create_evacuee as crud_create_evacuee, get_evacuees, get_evacuee, get_evacuee_details
 from api import schemas
 from api.database import get_db
 
@@ -11,20 +11,13 @@ router = APIRouter(
     tags=["evacuees"],   # ドキュメントで使用されるタグ
 )
 
-@router.get("/", response_model=List[schemas.Evacuee])
-def read_evacuees(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
-    """
-    複数の避難者情報を取得するエンドポイント
 
-    Args:
-        skip (int): スキップするレコードの数。デフォルトは0。
-        limit (int): 取得するレコードの上限。デフォルトは10。
-        db (Session): データベースセッション。FastAPIの依存関係として注入される。
-
-    Returns:
-        List[schemas.Evacuee]: 避難者情報のリスト。
-    """
-    return get_evacuees(db, skip=skip, limit=limit)
+@router.get("/")
+def read_evacuees(db: Session = Depends(get_db)):
+    evacuees = get_evacuee_details(db)
+    if not evacuees:
+        raise HTTPException(status_code=404, detail="No evacuee details found")
+    return evacuees
 
 @router.get("/{evacuee_id}", response_model=schemas.Evacuee)
 def read_evacuee(evacuee_id: str, db: Session = Depends(get_db)):

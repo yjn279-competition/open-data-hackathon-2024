@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
-from api.crud.material import get_materials, get_material, create_material, update_material, delete_material
+from api.crud.material import get_materials, get_material, create_material, update_material, delete_material, get_material_details
 from api import schemas
 from api.database import get_db
 
@@ -11,20 +11,12 @@ router = APIRouter(
     tags=["materials"],   # ドキュメントで使用されるタグ
 )
 
-@router.get("/", response_model=List[schemas.Material])
-def read_materials(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
-    """
-    複数の材料を取得するエンドポイント
-
-    Args:
-        skip (int): スキップするレコードの数。デフォルトは0。
-        limit (int): 取得するレコードの上限。デフォルトは10。
-        db (Session): データベースセッション。FastAPIの依存関係として注入される。
-
-    Returns:
-        List[schemas.Material]: 材料情報のリスト。
-    """
-    return get_materials(db, skip=skip, limit=limit)
+@router.get("/")
+def read_materials(db: Session = Depends(get_db)):
+    materials = get_material_details(db)
+    if not materials:
+        raise HTTPException(status_code=404, detail="No materials found")
+    return materials
 
 @router.get("/{material_id}", response_model=schemas.Material)
 def read_material(material_id: str, db: Session = Depends(get_db)):

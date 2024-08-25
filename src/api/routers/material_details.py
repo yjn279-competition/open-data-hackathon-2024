@@ -11,6 +11,8 @@ router = APIRouter(
     tags=["material_details"],   # ドキュメントで使用されるタグ
 )
 
+
+
 @router.get("/", response_model=List[schemas.MaterialDetail])
 def read_material_details(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
     """

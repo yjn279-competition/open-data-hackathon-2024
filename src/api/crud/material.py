@@ -1,5 +1,44 @@
 from sqlalchemy.orm import Session
+from sqlalchemy import text
 from api import models, schemas
+from sqlalchemy import select, join
+
+
+def get_material_details(db: Session):
+    query = text("""
+        SELECT
+            shelter.name AS shelter_name,
+            shelter.address AS shelter_address,
+            materials.name AS material_name,
+            materials.genre,
+            materials.allergy_code,
+            materials_detail.quantity,
+            materials_detail.expiration_date
+        FROM
+            shelter_table AS shelter
+            INNER JOIN materials_table AS materials ON shelter.shelter_code = materials.shelter_code
+            INNER JOIN materials_detail_table AS materials_detail ON materials.material_id = materials_detail.material_id;
+    """)
+    
+    # 辞書形式で結果を取得
+    result = db.execute(query)
+    rows = result.mappings().all()
+
+    response_content = [
+        {
+            "shelter_name": row['shelter_name'],
+            "shelter_address": row['shelter_address'],
+            "material_name": row['material_name'],
+            "genre": row['genre'],
+            "allergy_code": row['allergy_code'],
+            "quantity": row['quantity'],
+            "expiration_date": row['expiration_date']
+        }
+        for row in rows
+    ]
+
+    return response_content
+
 
 def get_materials(db: Session, skip: int = 0, limit: int = 10):
     """
