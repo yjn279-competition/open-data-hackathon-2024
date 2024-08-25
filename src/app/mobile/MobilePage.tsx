@@ -14,7 +14,7 @@ const MobilePage = () => {
         >
           ☰
         </button>
-        <h1 className="text-xl font-bold">災害情報アプリ</h1>
+        <h1 className="text-xl font-bold">みえるーむ</h1>
       </header>
 
       {/* Side Menu */}
@@ -30,7 +30,9 @@ const MobilePage = () => {
               </button>
               <nav>
                 <ul>
-                  <li><Link href="./MyPage" className="block py-2 text-black">情報一覧</Link></li>
+                  <li><Link href="/mobile" className="block py-2 text-black">TOPページ</Link></li>
+                  <li><Link href="./mobile/MyPage/view" className="block py-2 text-black">ユーザー情報</Link></li>
+                  <li><Link href="/mobile/QRread/success" className="block py-2 text-black">QRコード読み取り</Link></li>
                   {/* 他のメニュー項目 */}
                 </ul>
               </nav>
@@ -43,7 +45,7 @@ const MobilePage = () => {
       <main className="flex-grow mt-16 p-4 overflow-y-auto">
         {/* User Name */}
         <div className="mb-4">
-          <h2 className="text-xl font-semibold">ようこそ、ユーザー様</h2>
+          <h2 className="text-xl font-semibold">ようこそ、中村 勇士様</h2>
         </div>
 
         {/* Map */}
