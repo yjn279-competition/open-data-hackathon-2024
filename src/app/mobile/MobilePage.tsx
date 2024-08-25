@@ -31,7 +31,7 @@ const MobilePage = () => {
               <nav>
                 <ul>
                   <li><Link href="/mobile" className="block py-2 text-black">TOPページ</Link></li>
-                  <li><Link href="./mobile/MyPage/view" className="block py-2 text-black">ユーザー情報</Link></li>
+                  <li><Link href="/mobile/MyPage/view" className="block py-2 text-black">ユーザー情報</Link></li>
                   <li><Link href="/mobile/QRread/success" className="block py-2 text-black">QRコード読み取り</Link></li>
                   {/* 他のメニュー項目 */}
                 </ul>
