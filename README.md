@@ -14,7 +14,7 @@ cd open-data-hackathon-2024
 
 # Install front-end packages
 
-volta install npm
+volta install node
 npm install
 
 # Install back-end packages
@@ -38,13 +38,13 @@ npm run dev
 2. 以下のコマンドで仮想環境を起動する。
 
 ```shell
-cd src/api
 . .venv/bin/activate
 ```
 
 3. 以下のコマンドでサーバーを起動する。
 
 ```shell
+cd src/api
 uvicorn main:app --reload
 ```
 
