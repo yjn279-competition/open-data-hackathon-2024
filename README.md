@@ -39,13 +39,14 @@ npm run dev
 
 ```shell
 cd src/api
-. .venv/bin/activate
+make intall 
+source .venv/bin/activate
 ```
 
 3. 以下のコマンドでサーバーを起動する。
 
 ```shell
-uvicorn main:app --reload
+make run 
 ```
 
 4. [http://127.0.0.1:8000](http://127.0.0.1:8000)でAPIサーバーにアクセスできる。
