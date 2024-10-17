@@ -149,3 +149,20 @@ class Shelter(ShelterBase):
 
     class Config:
         orm_mode = True  # ORMモードを有効にして、ORMモデルとの互換性を持たせます。
+
+class BLEDataBase(BaseModel):
+    device_id: str
+    data: str
+
+class BLEDataCreate(BLEDataBase):
+    pass
+
+class BLEDataUpdate(BaseModel):
+    device_id: Optional[str] = None
+    data: Optional[str] = None
+
+class BLEData(BLEDataBase):
+    id: int
+
+    class Config:
+        orm_mode = True
