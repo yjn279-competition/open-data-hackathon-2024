@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from api.routers import evacuees, materials, material_details, shelters
+from api.routers import evacuees, materials, material_details, shelters, ble
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -18,6 +18,7 @@ app.include_router(evacuees.router)
 app.include_router(materials.router)
 app.include_router(material_details.router)
 app.include_router(shelters.router)
+app.include_router(ble.router)  # ble ルーターを FastAPI アプリケーションに登録
 
 @app.get("/")
 def read_root():
