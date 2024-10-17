@@ -4,8 +4,7 @@ from sqlalchemy.sql import func
 from api.database import Base
 
 class Evacuee(Base):
-    """
-    Evacueeテーブルを表すSQLAlchemyモデル。
+    """Evacueeテーブルを表すSQLAlchemyモデル。
     避難者情報を管理します。
     """
     __tablename__ = "evacuee_table"
@@ -29,8 +28,7 @@ class MyNumberCard(Base):
 
 
 class Material(Base):
-    """
-    Materialテーブルを表すSQLAlchemyモデル。
+    """Materialテーブルを表すSQLAlchemyモデル。
     材料情報を管理します。
     """
     __tablename__ = "materials_table"
@@ -46,8 +44,7 @@ class Material(Base):
     details = relationship("MaterialDetail", back_populates="material")
 
 class MaterialDetail(Base):
-    """
-    MaterialDetailテーブルを表すSQLAlchemyモデル。
+    """MaterialDetailテーブルを表すSQLAlchemyモデル。
     材料の詳細情報を管理します。
     """
     __tablename__ = "materials_detail_table"
@@ -66,8 +63,7 @@ class MaterialDetail(Base):
     material = relationship("Material", back_populates="details")
 
 class Shelter(Base):
-    """
-    Shelterテーブルを表すSQLAlchemyモデル。
+    """Shelterテーブルを表すSQLAlchemyモデル。
     避難所情報を管理します。
     """
     __tablename__ = "shelter_table"
@@ -93,8 +89,7 @@ class Shelter(Base):
     )
 
 class DeviceData(Base):
-    """
-    BLEデバイス情報を管理するためのモデル。
+    """BLEデバイス情報を管理するためのモデル。
     """
     __tablename__ = "ble_device_data"
 

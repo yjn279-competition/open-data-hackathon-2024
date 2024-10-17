@@ -21,15 +21,7 @@ def read_evacuees(db: Session = Depends(get_db)):
 
 @router.get("/{evacuee_id}", response_model=schemas.Evacuee)
 def read_evacuee(evacuee_id: str, db: Session = Depends(get_db)):
-    """
-    特定の避難者情報をIDで取得するエンドポイント
-
-    Args:
-        evacuee_id (str): 取得する避難者のID。
-        db (Session): データベースセッション。FastAPIの依存関係として注入される。
-
-    Returns:
-        schemas.Evacuee: 指定したIDの避難者情報。見つからない場合は404エラーを返す。
+    """特定の避難者情報をIDで取得するエンドポイント
     """
     evacuee = get_evacuee(db, evacuee_id=evacuee_id)
     if not evacuee:
