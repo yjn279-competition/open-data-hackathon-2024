@@ -3,12 +3,14 @@ from api import models, schemas
 
 # 複数のBLEデバイスデータを取得します
 def get_ble_devices(db: Session, skip: int = 0, limit: int = 10):
-    """複数のBLEデバイスデータを取得します"""
+    """複数のBLEデバイスデータを取得します
+    """
     return db.query(models.DeviceData).offset(skip).limit(limit).all()
 
 # 特定のBLEデバイスデータを取得します
 def get_ble_device(db: Session, device_id: str):
-    """特定のBLEデバイスデータをデバイスIDで取得します"""
+    """特定のBLEデバイスデータをデバイスIDで取得します
+    """
     return db.query(models.DeviceData).filter(models.DeviceData.device_id == device_id).first()
 
 def create_device_data(db: Session, ble_data: schemas.BLEDataCreate):
@@ -20,7 +22,8 @@ def create_device_data(db: Session, ble_data: schemas.BLEDataCreate):
 
 # 既存のBLEデバイスデータを更新します
 def update_ble_device(db: Session, device_id: str, ble_data_update: schemas.BLEDataUpdate):
-    """既存のBLEデバイスデータを更新します"""
+    """既存のBLEデバイスデータを更新します
+    """
     db_ble_device = get_ble_device(db, device_id)  # 既存のデバイスデータを取得
     if db_ble_device:
         for key, value in ble_data_update.dict(exclude_unset=True).items():
@@ -31,7 +34,8 @@ def update_ble_device(db: Session, device_id: str, ble_data_update: schemas.BLED
 
 # 特定のBLEデバイスデータを削除します
 def delete_ble_device(db: Session, device_id: str):
-    """特定のBLEデバイスデータを削除します"""
+    """特定のBLEデバイスデータを削除します
+    """
     db_ble_device = get_ble_device(db, device_id)  # 既存のデバイスデータを取得
     if db_ble_device:
         db.delete(db_ble_device)
@@ -40,7 +44,6 @@ def delete_ble_device(db: Session, device_id: str):
 
 # 複数のBLEデバイスデータを取得します
 def get_ble_devices(db: Session, skip: int = 0, limit: int = 10):
-    """
-    複数のBLEデバイスデータを取得します
+    """複数のBLEデバイスデータを取得します
     """
     return db.query(models.DeviceData).offset(skip).limit(limit).all()
