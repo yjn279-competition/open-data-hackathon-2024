@@ -12,12 +12,12 @@ class Evacuee(Base):
 
     evacuee_id = Column(String(64), primary_key=True, index=True)  # 避難者ID（主キー）
     is_safety = Column(Boolean)  # 安否確認
-    shelter_code = Column(String(64))  # 避難所コード
+    shelter_code = Column(String(64), ForeignKey('shelter_table.shelter_code'))  # 避難所コード（外部キー）
     allergy_code = Column(String(2))  # アレルギーコード
     update_at = Column(TIMESTAMP, server_default=func.now(), onupdate=func.now())  # レコード更新時のタイムスタンプ
     create_at = Column(TIMESTAMP, server_default=func.now())  # レコード作成時のタイムスタンプ
 
-
+    # 避難所とのリレーションシップ
     shelter = relationship("Shelter", back_populates="evacuees")
 
 class MyNumberCard(Base):
@@ -84,9 +84,22 @@ class Shelter(Base):
     update_at = Column(TIMESTAMP, server_default=func.now(), onupdate=func.now())  # レコード更新時のタイムスタンプ
     create_at = Column(TIMESTAMP, server_default=func.now())  # レコード作成時のタイムスタンプ
 
+    # 避難者とのリレーションシップ
     evacuees = relationship("Evacuee", back_populates="shelter")
 
     # availability_statusの値を制約
     __table_args__ = (
         CheckConstraint('availability_status IN (\'0\', \'1\', \'2\')', name='check_availability_status'),
     )
+
+class DeviceData(Base):
+    """
+    BLEデバイス情報を管理するためのモデル。
+    """
+    __tablename__ = "ble_device_data"
+
+    id = Column(Integer, primary_key=True, index=True)  # 主キーID
+    device_id = Column(String(64), nullable=False, index=True)  # BLEデバイスのID
+    data = Column(String(256), nullable=False)  # デバイスから取得したデータ（例: バッテリーレベル）
+    create_at = Column(TIMESTAMP, server_default=func.now())  # レコード作成時のタイムスタンプ
+    update_at = Column(TIMESTAMP, server_default=func.now(), onupdate=func.now())  # レコード更新時のタイムスタンプ
